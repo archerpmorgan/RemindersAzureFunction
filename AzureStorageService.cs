@@ -57,10 +57,10 @@ namespace TimerTriggerReminders.Function
             };
             var secretClient = new SecretClient(new Uri("https://armorgankv.vault.azure.net/"), new DefaultAzureCredential(), options);
 
-            personalEmail = secretClient.GetSecret("<personalemail>").Value.ToString();
-            sendgridKey = secretClient.GetSecret("<sendgridkey>").Value.ToString();
+            personalEmail = secretClient.GetSecret("personalemail").Value.ToString();
+            sendgridKey = secretClient.GetSecret("sendgridkey").Value.ToString();
 
-            // AzureServiceTokenProvider will help us to get the Service Managed token.
+            //AzureServiceTokenProvider will help us to get the Service Managed token.
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
 
             // Authenticate to the Azure Resource Manager to get the Service Managed token.
@@ -80,7 +80,7 @@ namespace TimerTriggerReminders.Function
 
             var keys = JsonConvert.DeserializeObject<DatabaseAccountListKeysResult>(keysResult);
 
-            cosmosClient = new CosmosClient(cosmosDbEndpoint, sendgridKey);
+            cosmosClient = new CosmosClient(cosmosDbEndpoint, keys.primaryMasterKey);
             await fetchReminders();
         }
 

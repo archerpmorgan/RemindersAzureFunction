@@ -12,7 +12,7 @@ namespace TimerTriggerReminders.Function
     public class TimerTriggerReminders
     {
         [FunctionName("TimerTriggerReminders")]
-        public async Task Run([TimerTrigger("* */1 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("1 * * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
@@ -21,8 +21,8 @@ namespace TimerTriggerReminders.Function
 
             log.LogInformation(azureService.reminders[0]);
 
-            var apiKey = Environment.GetEnvironmentVariable(azureService.sendgridKey);
-            var personalEmail = Environment.GetEnvironmentVariable(azureService.personalEmail);
+            var apiKey = azureService.sendgridKey;
+            var personalEmail = azureService.personalEmail;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(personalEmail, "Archer");
             var subject = "Archer\'s Reminder Service";
