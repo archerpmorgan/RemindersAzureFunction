@@ -5,20 +5,27 @@ using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
+
+
 namespace TimerTriggerReminders.Function
 {
     public class TimerTriggerReminders
     {
         [FunctionName("TimerTriggerReminders")]
-        public async Task Run([TimerTrigger("*/1 * * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("* */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
-            var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-            var personalEmail = Environment.GetEnvironmentVariable("PERSONAL_EMAIL");
+            var azureService = new AzureStorageService();
+            await azureService.Initialize(log);
+
+            log.LogInformation(azureService.reminders[0]);
+
+            var apiKey = Environment.GetEnvironmentVariable(azureService.sendgridKey);
+            var personalEmail = Environment.GetEnvironmentVariable(azureService.personalEmail);
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(personalEmail, "Archer");
-            var subject = "Test email";
+            var subject = "Archer\'s Reminder Service";
             var to = new EmailAddress(personalEmail, "Archer");
             var plainTextContent = "Test content";
             var htmlContent = "<strong>Test content</strong>";

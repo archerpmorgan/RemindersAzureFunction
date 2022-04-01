@@ -10,6 +10,7 @@
 - storage and ZCS connection string in key vault
 - function app connects to key vault with managed identity to access sendgrid, azure storage, and personal email address
 <https://docs.microsoft.com/en-us/azure/cosmos-db/managed-identity-based-authentication>
+<https://docs.microsoft.com/en-us/azure/key-vault/general/tutorial-net-create-vault-azure-web-app>
 - database of reminders in storage account
 
 WBAUP73579VK76105
