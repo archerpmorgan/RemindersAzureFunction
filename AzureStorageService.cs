@@ -13,6 +13,7 @@ using Azure.Security.KeyVault.Secrets;
 using Azure.Core;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net.Http.Json;
 
 namespace TimerTriggerReminders.Function
 {
@@ -37,6 +38,7 @@ namespace TimerTriggerReminders.Function
 
         public string personalEmail;
         public string sendgridKey;
+        public string cosmosKey;
         public List<string> reminders;
 
         private ILogger logger;
@@ -57,30 +59,12 @@ namespace TimerTriggerReminders.Function
             };
             var secretClient = new SecretClient(new Uri("https://armorgankv.vault.azure.net/"), new DefaultAzureCredential(), options);
 
-            personalEmail = secretClient.GetSecret("personalemail").Value.ToString();
-            sendgridKey = secretClient.GetSecret("sendgridkey").Value.ToString();
+            personalEmail = secretClient.GetSecret("personalemail").Value.Value;
+            sendgridKey = secretClient.GetSecret("sendgridkey").Value.Value;
+            cosmosKey = secretClient.GetSecret("cosmosKey").Value.Value;
+            
 
-            //AzureServiceTokenProvider will help us to get the Service Managed token.
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-
-            // Authenticate to the Azure Resource Manager to get the Service Managed token.
-            string accessToken = await azureServiceTokenProvider.GetAccessTokenAsync("https://management.azure.com/");
-
-            // Setup the List Keys API to get the Azure Cosmos DB keys.
-            string endpoint = $"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/databaseAccounts/{accountName}/listKeys?api-version=2019-12-12";
-
-            // Add the access token to request headers.
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            // Post to the endpoint to get the keys result.
-            var result = await httpClient.PostAsync(endpoint, new StringContent(""));
-
-            // Get the result back as a DatabaseAccountListKeysResult.
-            string keysResult = await result.Content.ReadAsStringAsync();
-
-            var keys = JsonConvert.DeserializeObject<DatabaseAccountListKeysResult>(keysResult);
-
-            cosmosClient = new CosmosClient(cosmosDbEndpoint, keys.primaryMasterKey);
+            cosmosClient = new CosmosClient(cosmosDbEndpoint, cosmosKey);
             await fetchReminders();
         }
 

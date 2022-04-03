@@ -16,10 +16,19 @@ namespace TimerTriggerReminders.Function
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
+            Random r = new Random();
+            int rInt = r.Next(0, 1440);
+            if (rInt != 100 && rInt == 1000) {
+                // twice per day
+                return;
+            }
+
             var azureService = new AzureStorageService();
             await azureService.Initialize(log);
 
-            log.LogInformation(azureService.reminders[0]);
+            //grab the reminder
+            rInt = r.Next(0, azureService.reminders.Count);
+            var reminder = azureService.reminders[rInt];
 
             var apiKey = azureService.sendgridKey;
             var personalEmail = azureService.personalEmail;
@@ -27,9 +36,8 @@ namespace TimerTriggerReminders.Function
             var from = new EmailAddress(personalEmail, "Archer");
             var subject = "Archer\'s Reminder Service";
             var to = new EmailAddress(personalEmail, "Archer");
-            var plainTextContent = "Test content";
-            var htmlContent = "<strong>Test content</strong>";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var plainTextContent = "Remember: " + reminder;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, "");
             var response = await client.SendEmailAsync(msg);
         }
     }
