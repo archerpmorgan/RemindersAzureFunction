@@ -18,7 +18,7 @@ namespace TimerTriggerReminders.Function
 
             Random r = new Random();
             int rInt = r.Next(0, 1440);
-            if (rInt != 100 && rInt == 1000) {
+            if (rInt != 100 && rInt != 1000) {
                 // twice per day
                 return;
             }
