@@ -1,23 +1,11 @@
 # Design Spec
 
 1. codebase in github
-2. timer azure function runs every minute
-3. random number in function dictates that only every so often the action actually does anything
-    In the end I get about 2-3 reminders a day
-4. sends an email to my personal address using Sendgrid
+2. azure function runs every minute, but only succeeds, makes api calls, sends messages randomly 3-4 times per day
+3. sends an email to my personal address using Sendgrid, or sends sms to my phone using twilio
+4. secrets in key vault, access granted to function app through managed identity
+5. reminder strings in cosmosdb
+6. deployed through github action on commit to master or manually
 
-
-- storage and ZCS connection string in key vault
-- function app connects to key vault with managed identity to access sendgrid, azure storage, and personal email address
 <https://docs.microsoft.com/en-us/azure/cosmos-db/managed-identity-based-authentication>
 <https://docs.microsoft.com/en-us/azure/key-vault/general/tutorial-net-create-vault-azure-web-app>
-- database of reminders in storage account
-
-WBAUP73579VK76105
-
-
-
-- get working
-- flesh out reminders
-- update this file to include all details needed to come back to this
-- commit
