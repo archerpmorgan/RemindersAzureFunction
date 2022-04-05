@@ -22,9 +22,9 @@ namespace TimerTriggerReminders.Function
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
             Random r = new Random();
-            int rInt = r.Next(0, 5);
-            if (rInt > 3) {
-                // about four times per day, since this condition passes 4/1440 times and this function wil run 1440 times per day
+            int rInt = r.Next(0, 1440);
+            if (rInt > 6) {
+                // about five times per day, since this condition passes 5/1440 times and this function wil run 1440 times per day
                 return;
             }
 
