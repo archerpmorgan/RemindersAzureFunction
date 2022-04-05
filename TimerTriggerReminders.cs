@@ -17,7 +17,7 @@ namespace TimerTriggerReminders.Function
 
         //To run every minute, but only send a message about 3-4 times per day
         // 1440 minutes per day
-        public async Task Run([TimerTrigger("* * * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("* * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
