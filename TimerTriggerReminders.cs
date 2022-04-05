@@ -23,10 +23,10 @@ namespace TimerTriggerReminders.Function
 
             Random r = new Random();
             int rInt = r.Next(0, 1440);
-            // if (rInt > 3) {
-            //     // about four times per day, since this condition passes 4/1440 times and this function wil run 1440 times per day
-            //     return;
-            // }
+            if (rInt > 3) {
+                // about four times per day, since this condition passes 4/1440 times and this function wil run 1440 times per day
+                return;
+            }
 
             var azureService = new AzureStorageService();
             await azureService.Initialize(log);
