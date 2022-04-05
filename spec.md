@@ -14,3 +14,10 @@
 - database of reminders in storage account
 
 WBAUP73579VK76105
+
+
+
+- get working
+- flesh out reminders
+- update this file to include all details needed to come back to this
+- commit

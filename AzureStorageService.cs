@@ -39,6 +39,9 @@ namespace TimerTriggerReminders.Function
         public string personalEmail;
         public string sendgridKey;
         public string cosmosKey;
+
+        public string twiliosid;
+        public string twiliotoken;
         public List<string> reminders;
 
         private ILogger logger;
@@ -47,6 +50,20 @@ namespace TimerTriggerReminders.Function
         {
             reminders = new List<string>();
             this.logger = logger;
+
+            await initprod();
+            cosmosClient = new CosmosClient(cosmosDbEndpoint, cosmosKey);
+            await fetchReminders();
+        }
+
+        private async Task initlocal() {
+            cosmosKey = "";
+            twiliosid = "";
+            twiliotoken = "";
+        }
+
+        private async Task initprod(){
+
             SecretClientOptions options = new SecretClientOptions()
             {
                 Retry =
@@ -61,11 +78,9 @@ namespace TimerTriggerReminders.Function
 
             personalEmail = secretClient.GetSecret("personalemail").Value.Value;
             sendgridKey = secretClient.GetSecret("sendgridkey").Value.Value;
-            cosmosKey = secretClient.GetSecret("cosmosKey").Value.Value;
-            
-
-            cosmosClient = new CosmosClient(cosmosDbEndpoint, cosmosKey);
-            await fetchReminders();
+            cosmosKey = secretClient.GetSecret("cosmoskey").Value.Value;
+            twiliosid = secretClient.GetSecret("twiliosid").Value.Value;
+            twiliotoken = secretClient.GetSecret("twiliotoken").Value.Value;
         }
 
         public AzureStorageService()
