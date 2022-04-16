@@ -23,8 +23,7 @@ namespace TimerTriggerReminders.Function
 
             Random r = new Random();
             int rInt = r.Next(0, 1440);
-            if (rInt > 6) {
-                // about five times per day, since this condition passes 5/1440 times and this function wil run 1440 times per day
+            if (rInt > 1) {
                 return;
             }
 
