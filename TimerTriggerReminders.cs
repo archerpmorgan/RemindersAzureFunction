@@ -17,12 +17,12 @@ namespace TimerTriggerReminders.Function
 
         //To run every minute, but only send a message about 3-4 times per day
         // 1440 minutes per day
-        public async Task Run([TimerTrigger("* * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("* 1 6-20 * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
             Random r = new Random();
-            int rInt = r.Next(0, 1440);
+            int rInt = r.Next(0, 16);
             if (rInt > 1) {
                 return;
             }
